@@ -2,7 +2,7 @@ package com.nikolov.heroes.service.services.implementations;
 
 import com.nikolov.heroes.data.models.User;
 import com.nikolov.heroes.data.repositories.UserRepository;
-import com.nikolov.heroes.service.models.LoginUserServiceModel;
+import com.nikolov.heroes.service.models.auth.LoginUserServiceModel;
 import com.nikolov.heroes.service.models.auth.RegisterUserServiceModel;
 import com.nikolov.heroes.service.services.AuthService;
 import com.nikolov.heroes.service.services.AuthValidationService;
@@ -29,7 +29,6 @@ public class AuthServiceImpl implements AuthService {
 		this.hashingService = hashingService;
 	}
 
-
 	@Override
 	public void register(RegisterUserServiceModel model) {
 		if (!authValidationService.isValid(model)) {
@@ -44,6 +43,15 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public LoginUserServiceModel login(RegisterUserServiceModel model) throws Exception {
-		return null;
+		String passwordHash = this.hashingService.hash(model.getPassword());
+		return this.userRepository.findByUsernameAndPassword(model.getUsername(), passwordHash)
+				.map(user -> {
+					String heroName = user.getHero() == null
+							? null
+							: user.getHero().getName();
+
+					return new LoginUserServiceModel(model.getUsername(), heroName);
+				})
+				.orElseThrow(() -> new Exception("Invalid user"));
 	}
 }

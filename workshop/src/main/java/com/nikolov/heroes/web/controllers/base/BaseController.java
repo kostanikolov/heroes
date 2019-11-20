@@ -1,6 +1,6 @@
 package com.nikolov.heroes.web.controllers.base;
 
-import com.nikolov.heroes.service.models.LoginUserServiceModel;
+import com.nikolov.heroes.service.models.auth.LoginUserServiceModel;
 
 import javax.servlet.http.HttpSession;
 
