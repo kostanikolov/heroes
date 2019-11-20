@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:include="~{_shared/head}"/>
+<body>
+<th:block th:include="~{_shared/header}"/>
+<main>
+    <div class="text-center mb-3">
+        <h4 class="text-white mt-2">Welcome to the arena, Predator</h4>
+    </div>
+    <hr class="my-3"/>
+<!--    <th:block th:if="${session.user.heroName == null}">-->
+        <div class="container">
+            <div class="text-center">
+                <h2>User, you don't have a hero. Click below and create one.</h2>
+                <a href="/heroes/create" class="btn btn-secondary">Create hero</a>
+            </div>
+        </div>
+<!--    </th:block>-->
+
+<!--    <th:block th:unless="${session.user.heroName == null}">-->
+        <div class="container">
+            <div class="text-center">
+                <h2>User, you have a hero. Buy items to make your hero stronger and later join the battle.</h2>
+            </div>
+        </div>
+<!--    </th:block>-->
+</main>
+<th:block th:include="~{_shared/footer}"/>
+</body>
+</html>
