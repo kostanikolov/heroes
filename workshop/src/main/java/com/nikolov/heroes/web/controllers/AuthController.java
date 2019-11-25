@@ -1,5 +1,6 @@
 package com.nikolov.heroes.web.controllers;
 
+import com.nikolov.heroes.data.repositories.UserRepository;
 import com.nikolov.heroes.service.models.auth.LoginUserServiceModel;
 import com.nikolov.heroes.service.models.auth.RegisterUserServiceModel;
 import com.nikolov.heroes.service.services.AuthService;
@@ -15,10 +16,12 @@ import javax.servlet.http.HttpSession;
 public class AuthController {
 
 	private final AuthService authService;
+	private final UserRepository userRepository;
 	private final ModelMapper mapper;
 
-	public AuthController(AuthService authService, ModelMapper mapper) {
+	public AuthController(AuthService authService, UserRepository userRepository, ModelMapper mapper) {
 		this.authService = authService;
+		this.userRepository = userRepository;
 		this.mapper = mapper;
 	}
 
@@ -30,10 +33,14 @@ public class AuthController {
 	@PostMapping("/login")
 	public String loginConfirm(@ModelAttribute RegisterUserModel model, HttpSession session) {
 		RegisterUserServiceModel registerServiceModel = this.mapper.map(model, RegisterUserServiceModel.class);
+		String email = this.userRepository.findByUsername(model.getUsername()).getEmail();
+		int heroLevel = this.userRepository.findByUsername(model.getUsername()).getHero().getLevel();
 
 		try {
 			LoginUserServiceModel loginServiceModel = this.authService.login(registerServiceModel);
 			session.setAttribute("user", loginServiceModel);
+			session.setAttribute("email", email);
+			session.setAttribute("heroLevel", heroLevel);
 			return "redirect:/";
 		} catch (Exception e) {
 			return "redirect:/users/login";
